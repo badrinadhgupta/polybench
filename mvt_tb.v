@@ -1,47 +1,32 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 05.05.2020 14:08:33
-// Design Name: 
-// Module Name: matrix3_tb
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 
-module matrix3_tb( );
-    reg [31:0] Aout,Atout,y1,y2;
+module matrix4_tb(
+
+    );
+    reg [31:0] Aout,y;
     reg clk;
-    wire [31:0] x1,x2;
+    wire [31:0] x;
     reg [31:0] A[0:10000];
     reg [31:0] At[0:10000];
-    integer i,m,n=0,j;
+    integer i,m,n=0,j,k=0;
     
-    matrix3 m3(Aout,Atout,y1,y2,clk,x1,x2);
+    matrix4 m4(Aout,y,clk,x);
     
     initial begin
     clk=1;
-    
     end
     
     always begin
-#2.5  clk=~clk; end
+#1.25  clk=~clk; 
+    end
     
     initial begin
          for(i=0;i<10000;i=i+1)
          begin
-           A[i]=i+4;
+           A[i]=k;
+           k=k+1;
+#2.5       Aout=A[i];    
          end   
          for(i=0;i<100;i=i+1)
          begin
@@ -50,29 +35,41 @@ module matrix3_tb( );
                 At[j*100+i]=A[i*100+j];
             end
          end
+ #10        
+         for(i=0;i<10000;i=i+1)
+         begin
+#2.5            Aout=At[i];
+         end
+         
     end
     
-    initial begin
     
-        for(m=0;m<10000;m=m+1)
-        begin
-#5          Aout=A[m];
-            Atout=At[m];
-        end
+    initial begin
+   for(m=0;m<10100;m=m+1)
+   begin
+        if(n<100)
+            begin
+#2.5            y=n;
+                n=n+1;
+            end
+            else begin
+                n=0;
+
+            end
     end
-    
-    initial begin
-    for(m=0;m<10000;m=m+1)
+    n=0;
+#10    
+    for(m=0;m<10100;m=m+1)
     begin
         if(n<100)
             begin
- #5               y1=n;
-                y2=n+1;
+#2.5                y=n;
                 n=n+1;
             end
             else begin
                 n=0;
             end
     end
+    
     end
 endmodule
