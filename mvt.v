@@ -1,46 +1,36 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 05.05.2020 14:03:57
-// Design Name: 
-// Module Name: matrix3
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 
-module matrix3(Aout,Atout,y1,y2,clk,x1,x2);
-    input [31:0] Aout,Atout,y1,y2,clk;
-    output [31:0] x1,x2;
-    reg [31:0] x1,x2;
+module matrix4(
+    input [31:0] Aout,
     
+    input [31:0] y,
+    
+    input clk,
+    output [31:0] x
+    
+    );
+        reg [31:0] x;
+    real frequency;
+    real t0;
+    real t1;
     
     initial begin
-        x1=0;
-        x2=0;
+    @(posedge clk)t0=$realtime;
+        x=0;
         end
    always@(posedge clk)
    begin
-        if((y1<100))
+        if((y<100)&&(y!=0))
         begin
-        x1=x1+Aout*y1;
-        x2=x2+Atout*y2;  
+        x=x+Aout*y;
         end
-        else
+        else if(y==0)
         begin
-            x1=0;
-            x2=0;
-        end;
+            x=0;
+        end
+ @ (posedge clk) t1 = $realtime;
+frequency = 1.0e9 / (t1 - t0);
+$display("Frequency = %g", frequency);
    end
 endmodule
